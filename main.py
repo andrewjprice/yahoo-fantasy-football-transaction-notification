@@ -16,8 +16,13 @@ def poll_transactions():
 
     if transactions:
         last_transaction = transactions[0]
-        last_record = client.transactions.find().sort('transaction_id', DESCENDING).next()
-        number_of_new_transactions = int(last_transaction['transaction'].transaction_id) - int(last_record['transaction_id'])
+        last_record_id = 0
+
+        if client.transactions.count() > 0:
+            last_record = client.transactions.find().sort('transaction_id', DESCENDING).next()
+            last_record_id = int(last_record['transaction_id'])
+
+        number_of_new_transactions = int(last_transaction['transaction'].transaction_id) - last_record_id
 
         if number_of_new_transactions > 0:
             email_transaction_report(transactions=transactions[0:number_of_new_transactions])
