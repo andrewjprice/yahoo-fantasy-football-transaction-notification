@@ -6,9 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-yfpy
-pymongo
-APScheduler
+yfpy = "*"
+pymongo = "*"
+APScheduler = "*"
 python-dotenv = "==0.14.0"
 
 [requires]
