@@ -110,7 +110,12 @@ def multiple_player_transaction_html(transaction_obj=None):
 def player_table_row_html(player_obj=None):
     if player_obj is None:
         return ""
-    html = """<tr><td>%s</td>""" % player_obj.transaction_data.type
+
+    add_icon = "<span style='color: green; font-size: 2.5rem; font-weight: bold;'>&#43;</span>"
+    remove_icon = "<span style='color: red; font-size: 2.5rem; font-weight: bold;'>&#8722;</span>"
+    transaction_type_icon = add_icon if player_obj.transaction_data.type == "add" else remove_icon
+
+    html = """<tr><td>%s</td>""" % transaction_type_icon
     html += """<td>%s</td>""" % player_obj.name.full
     html += """<td>%s</td>""" % player_obj.editorial_team_abbr
     html += """<td>%s</td></tr>""" % player_obj.display_position
