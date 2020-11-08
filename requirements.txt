@@ -2,3 +2,4 @@ yfpy
 APScheduler
 pymongo
 python-dotenv==0.14.0
+Jinja2
