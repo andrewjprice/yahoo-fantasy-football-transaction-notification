@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "transaction_macros.jinja" import multiple_player_transactions, single_player_transaction %}
+
+{% block content %}
+    {% for transaction in transactions %}
+        {% set transaction_obj = transaction['transaction'] %}
+        {% if transaction_obj.type == "add/drop" %}
+            {{ multiple_player_transactions(transaction_obj=transaction_obj) }}
+        {% elif transaction_obj.type in ("add", "drop") %}
+            {{ single_player_transaction(transaction_obj=transaction_obj) }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

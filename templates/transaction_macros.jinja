@@ -1,0 +1,35 @@
+{% macro multiple_player_transactions(transaction_obj=none) %}
+    <table>
+        <thead><th colspan="2">{{ transaction_obj.players[-1]['player'].transaction_data.source_team_name }}</th></thead>
+        {% for player in transaction_obj.players %}
+            {{ player_row_macro(player['player']) }}
+        {% endfor %}
+    </table>
+{% endmacro %}
+
+{% macro single_player_transaction(transaction_obj=none) %}
+    <table>
+        {% set player_obj = transaction_obj.players['player'] %}
+        <thead>
+            {% if transaction_obj.type == "add" %}
+                <th colspan="2">{{player_obj.transaction_data.destination_team_name}}</th>
+            {% else %}
+                <th colspan="2">{{player_obj.transaction_data.source_team_name}}</th>
+            {% endif %}
+        </thead>
+        {{ player_row_macro(player_obj) }}
+    </table>
+{% endmacro %}
+
+{% macro player_row_macro(player_obj) %}
+    <tr>
+        {% if player_obj.transaction_data.type == "add" %}
+            <td><span class="add-player">&#43;</span></td>
+        {% else %}
+            <td><span class="drop-player">&#8722;</span></td>
+        {% endif %}
+        <td>{{ player_obj.name.full }}</td>
+        <td>{{ player_obj.editorial_team_abbr }}</td>
+        <td>{{ player_obj.display_position }}</td>
+    </tr>
+{% endmacro %}

@@ -1,4 +1,5 @@
 import os, smtplib, ssl
+from jinja2 import FileSystemLoader, Environment
 from datetime import datetime
 from pymongo import DESCENDING
 from yfpy.query import YahooFantasySportsQuery
@@ -71,52 +72,6 @@ def email_transaction_report(transactions=[]):
         server.sendmail(sender_email, receiver_email, message.as_string())
 
 def transaction_html_summary(transactions=[]):
-    html = """<html><body><h2>""" + str(len(transactions)) + """ new transaction(s)</h2>"""
-    for transaction in transactions:
-        transaction_obj = transaction['transaction']
-        if transaction_obj.type in ("add", "drop"):
-            html += single_player_transaction_html(transaction_obj)
-        if transaction_obj.type == "add/drop":
-            html += multiple_player_transaction_html(transaction_obj)
-    html += """</body></html>"""
-    return html
-
-def single_player_transaction_html(transaction_obj=None):
-    if transaction_obj is None:
-        return ""
-
-    html = """<table style="border: 0.5px solid black">"""
-    time_display = datetime.fromtimestamp(int(transaction_obj.timestamp)).strftime("%b %d %Y %-I:%M %p")
-    player_obj = transaction_obj.players['player']
-    team_name = player_obj.transaction_data.destination_team_name if transaction_obj.type == "add" else player_obj.transaction_data.source_team_name
-
-    html += """<thead><tr><th colspan="2">%s - %s</th></tr></thead>""" % (team_name, time_display)
-    html += player_table_row_html(player_obj)
-    html += """</tr></table><br />"""
-    return html
-
-def multiple_player_transaction_html(transaction_obj=None):
-    if transaction_obj is None:
-        return ""
-
-    html = """<table style="border: 0.5px solid black">"""
-    time_display = datetime.fromtimestamp(int(transaction_obj.timestamp)).strftime("%b %d %Y %-I:%M %p")
-    html += """<thead><tr><th colspan="2">%s - %s</th></tr></thead>""" % (transaction_obj.players[-1]['player'].transaction_data.source_team_name, time_display)
-    for player in transaction_obj.players:
-        html += player_table_row_html(player['player'])
-    html += """</table><br />"""
-    return html
-
-def player_table_row_html(player_obj=None):
-    if player_obj is None:
-        return ""
-
-    add_icon = "<span style='color: green; font-size: 2.5rem; font-weight: bold;'>&#43;</span>"
-    remove_icon = "<span style='color: red; font-size: 2.5rem; font-weight: bold;'>&#8722;</span>"
-    transaction_type_icon = add_icon if player_obj.transaction_data.type == "add" else remove_icon
-
-    html = """<tr><td>%s</td>""" % transaction_type_icon
-    html += """<td>%s</td>""" % player_obj.name.full
-    html += """<td>%s</td>""" % player_obj.editorial_team_abbr
-    html += """<td>%s</td></tr>""" % player_obj.display_position
-    return html
+    templateEnv = Environment(loader=FileSystemLoader(searchpath="./templates/"))
+    template = templateEnv.get_template('transaction.jinja')
+    return template.render(transactions=transactions)
