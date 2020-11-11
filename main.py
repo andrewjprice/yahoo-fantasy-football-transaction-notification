@@ -73,5 +73,5 @@ def email_transaction_report(transactions=[]):
 
 def transaction_html_summary(transactions=[]):
     templateEnv = Environment(loader=FileSystemLoader(searchpath="./templates/"))
-    template = templateEnv.get_template('transaction.jinja')
+    template = templateEnv.get_template('transaction.jinja2')
     return template.render(transactions=transactions)
