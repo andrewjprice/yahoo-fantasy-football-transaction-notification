@@ -24,12 +24,12 @@
 {% macro player_row_macro(player_obj) %}
     <tr>
         {% if player_obj.transaction_data.type == "add" %}
-            <td><span class="add-player">&#43;</span></td>
+            <td class="status-icon"><span class="add-player-icon">&#43;</span></td>
         {% else %}
-            <td><span class="drop-player">&#8722;</span></td>
+            <td class="status-icon"><span class="drop-player-icon">&#8722;</span></td>
         {% endif %}
-        <td>{{ player_obj.name.full }}</td>
-        <td>{{ player_obj.editorial_team_abbr }}</td>
-        <td>{{ player_obj.display_position }}</td>
+        <td class="player-name">{{ player_obj.name.full }}</td>
+        <td class="team-details">{{ player_obj.editorial_team_abbr }}</td>
+        <td class="team-details">{{ player_obj.display_position }}</td>
     </tr>
 {% endmacro %}
