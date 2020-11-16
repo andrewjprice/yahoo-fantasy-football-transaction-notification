@@ -1,6 +1,9 @@
 {% macro multiple_player_transactions(transaction_obj=none) %}
     <table>
-        <thead><th colspan="2">{{ transaction_obj.players[-1]['player'].transaction_data.source_team_name }}</th></thead>
+        <thead>
+            <tr><th colspan="4">{{ transaction_obj.players[-1]['player'].transaction_data.source_team_name }}</th></tr>
+            <tr><td colspan="4" class="left-align">{{ timestamp_to_datetime(transaction_obj.timestamp) }}<td></tr>
+        </thead>
         {% for player in transaction_obj.players %}
             {{ player_row_macro(player['player']) }}
         {% endfor %}
@@ -12,10 +15,11 @@
         {% set player_obj = transaction_obj.players['player'] %}
         <thead>
             {% if transaction_obj.type == "add" %}
-                <th colspan="2">{{player_obj.transaction_data.destination_team_name}}</th>
+                <tr><th colspan="4">{{player_obj.transaction_data.destination_team_name}}</th></tr>
             {% else %}
-                <th colspan="2">{{player_obj.transaction_data.source_team_name}}</th>
+                <tr><th colspan="2">{{player_obj.transaction_data.source_team_name}}</th></tr>
             {% endif %}
+            <tr><td colspan="4" class="left-align">{{ timestamp_to_datetime(transaction_obj.timestamp) }}<td></tr>
         </thead>
         {{ player_row_macro(player_obj) }}
     </table>

@@ -9,6 +9,8 @@ from db import DB
 from dotenv import load_dotenv
 load_dotenv()
 
+from helpers import util
+
 db = DB()
 client = db.client.prod
 
@@ -73,5 +75,6 @@ def email_transaction_report(transactions=[]):
 
 def transaction_html_summary(transactions=[]):
     templateEnv = Environment(loader=FileSystemLoader(searchpath="./templates/"))
+    templateEnv.globals['timestamp_to_datetime'] = util.timestamp_to_datetime
     template = templateEnv.get_template('transaction.jinja2')
     return template.render(transactions=transactions)
